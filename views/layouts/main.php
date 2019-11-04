@@ -35,7 +35,7 @@ PublicAsset::register($this);
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><img src="/public/images/logo.jpg" alt=""></a>
+                <a class="navbar-brand" href="/"><img src="/assets/images/logo.jpg" alt=""></a>
             </div>
 
 
