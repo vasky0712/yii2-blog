@@ -20,6 +20,7 @@ class ArticleController extends Controller
     /**
      * {@inheritdoc}
      */
+    
     public function actionSetImage($id)
     {
         $model = new ImageUpload;

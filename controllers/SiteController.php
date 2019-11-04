@@ -15,6 +15,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
+    public $layout = 'main';
     public function behaviors()
     {
         return [
@@ -124,5 +125,12 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    public function actionView(){
+        return $this->render('single');
+    }
+
+    public function actionCategory(){
+        return $this->render('category');
     }
 }
