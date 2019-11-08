@@ -10,6 +10,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Article;
+use app\models\CommentForm;
 use yii\data\Pagination;
 use app\models\Category;
 
@@ -143,6 +144,7 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
     public function actionView($id){
 
         $popular = Article::getPopular();
@@ -152,11 +154,17 @@ class SiteController extends Controller
         $categories = Category::getAll();
         $article= Article::findOne($id);
 
+        $comments  = $article->getArticleComments();
+
+        $commentForm = new CommentForm();
+
         return $this->render('single',[
             'article'=>$article,
             'popular'=>$popular,
             'recent'=>$recent,
-            'categories'=>$categories
+            'categories'=>$categories,
+            'comments'=>$comments,
+            'commentForm'=> $commentForm
         ]);
     }
 
@@ -173,5 +181,22 @@ class SiteController extends Controller
             'recent'=>$recent,
             'categories'=>$categories
         ]);
+    }
+
+    public function actionComment($id){
+        $model = new CommentForm();
+
+        if(Yii::$app->request->isPost){
+
+            $model->load(Yii::$app->request->post());
+
+            if($model->saveComment($id)){
+
+
+                Yii::$app->getSession()->setFlash('comment', 'Your comment wil be added soon!');
+                return $this->redirect(['site/view', 'id'=>$id]);
+
+            }
+        }
     }
 }
