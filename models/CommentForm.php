@@ -25,6 +25,12 @@ class CommentForm extends Model
 
         $comment->userId = Yii::$app->user->id;
 
+        if(!Yii::$app->user->identity->name){
+         
+            $comment->userId  = 4;
+            
+        }
+
         $comment->articleId = $articleId;
 
         $comment->status = 0;

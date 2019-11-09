@@ -5,6 +5,9 @@ namespace app\models;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\models\Article;
+use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * ArticleSearch represents the model behind the search form of `app\models\Article`.
@@ -40,7 +43,12 @@ class ArticleSearch extends Article
      */
     public function search($params)
     {
-        $query = Article::find();
+        if(Yii::$app->user->identity->isAdmin==1 ){
+            $query = Article::find();
+        }
+        else{
+            $query = Article::find()->where(['user_id'=>Yii::$app->user->id]);
+        }
 
         // add conditions that should always apply here
 

@@ -1,4 +1,6 @@
-<?php if(!Yii::$app->user->isGuest):?>
+<?php 
+
+if(Yii::$app->user->isGuest || !Yii::$app->user->isGuest ):?>
                 <div class="leave-comment"><!--leave comment-->
                     <h4>Leave a reply</h4>
 

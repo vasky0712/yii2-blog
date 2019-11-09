@@ -13,6 +13,7 @@ use app\models\Article;
 use app\models\CommentForm;
 use yii\data\Pagination;
 use app\models\Category;
+use app\models\ArticleSearch;
 
 class SiteController extends Controller
 {
@@ -158,6 +159,8 @@ class SiteController extends Controller
 
         $commentForm = new CommentForm();
 
+        $article->viewedCounter();
+
         return $this->render('single',[
             'article'=>$article,
             'popular'=>$popular,
@@ -198,5 +201,17 @@ class SiteController extends Controller
 
             }
         }
+    }
+
+    public function actionArticles(){
+
+        $searchModel = new ArticleSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('articles', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+
     }
 }
