@@ -43,7 +43,8 @@ class Article extends \yii\db\ActiveRecord
             [['title', 'description', 'content'], 'string'],
             [['date'], 'date', 'format'=>'php:Y-m-d'],
             [['date'], 'default', 'value'=> date('Y-m-d')],
-            [['title'], 'string', 'max'=>255]
+            [['title'], 'string', 'max'=>255],
+            [['status'], 'default', 'value' => 1],
         ];
     }
 
@@ -94,12 +95,27 @@ class Article extends \yii\db\ActiveRecord
         return $this->hasOne(Category::className(), ['id' => 'category_id']);
     }
 
+    public function getStatus()
+    {
+        return $this->hasOne(Status::className(), ['id' => 'status']);
+    }
+
     public function saveCategory($category_id)
     {
         $category = Category::findOne($category_id);
         if($category != null)
         {
             $this->link('category', $category);
+            return true;            
+        }
+    }
+
+
+    public function saveStatus($status){
+        $statuss = Status::findOne($status);
+        if($statuss != null)
+        {
+            $this->link('status', $statuss);
             return true;            
         }
     }
@@ -167,6 +183,8 @@ class Article extends \yii\db\ActiveRecord
         $this->user_id = Yii::$app->user->id;
         return $this->save();
     }
+
+    
 
     public function getComments(){
         return  $this->hasMany(Comment::className(), ['articleId'=>'id' ]);

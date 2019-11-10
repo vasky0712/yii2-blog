@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\admin\controllers;
 use app\models\Category;
+use app\models\Status;
 use app\models\ImageUpload;
 use app\models\Tag;
 use Yii;
@@ -40,6 +41,7 @@ class ArticleController extends Controller
     public function actionSetCategory($id){
         
         $article = $this->findModel($id);
+        $nameee  = $article->category->title;
         $selectedCategory = $article->category->id;
         $categories = ArrayHelper::map(Category::find()->all(), 'id', 'title');
         if(Yii::$app->request->isPost)
@@ -53,10 +55,41 @@ class ArticleController extends Controller
         return $this->render('category', [
             'article'=>$article,
             'selectedCategory'=>$selectedCategory,
-            'categories'=>$categories
+            'categories'=>$categories,
+            'nameee'->$nameee
         ]);
 
     }
+
+    public function actionSetStatus($id){
+        $article = $this->findModel($id);
+        $selectCategory = $article->status->id;
+        $categories = ArrayHelper::map(Status::find()->all(), 'id', 'title');
+
+        if(Yii::$app->request->isPost)
+        {
+            
+            
+            $status = Yii::$app->request->post('status');
+
+            if($article->saveStatus($status))
+            {
+                if($article->status == 3){
+                    $this->findModel($id)->delete();
+    
+                    return $this->redirect([Yii::getAlias('@web') . '/site/']);
+                };
+                return $this->redirect(['view', 'id'=>$article->id]);
+            }
+        }
+
+        return $this->render('status', [
+            'article'=>$article,
+            'selectCategory'=>$selectCategory,
+            'categories' =>$categories
+        ]);
+    }
+
 
     public function actionSetTags($id)
     {
@@ -75,6 +108,7 @@ class ArticleController extends Controller
             'tags'=>$tags
         ]);
     }
+
 
     public function behaviors()
     {

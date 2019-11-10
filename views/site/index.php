@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+
 ?>
 <div class="main-content">
     <div class="container">
@@ -8,7 +9,7 @@ use yii\widgets\LinkPager;
             <div class="col-md-8">
                 <?php
                     foreach ($articles as $article):?>
-                    
+                    <?php if($article->status ==1){ ?>
                 <article class="post">
                     <div class="post-thumb" style="text-align: center;">
                         <a href="<?= Url::toRoute(['site/view', 'id'=>$article->id ]); ?>"><img src="<?= $article->getImage(); ?>" style="max-height:400px
@@ -43,6 +44,7 @@ use yii\widgets\LinkPager;
                         </div>
                     </div>
                 </article>
+                    <?php }?>
                 <?php endforeach;?>  
                 
                 <?php
@@ -58,6 +60,8 @@ use yii\widgets\LinkPager;
                     <aside class="widget">
                         <h3 class="widget-title text-uppercase text-center">Popular Posts</h3>
                     <?php foreach($popular as $article):?>
+                    
+                        <?php if($article->status ==1){ ?>
                         <div class="popular-post">
 
 
@@ -72,11 +76,14 @@ use yii\widgets\LinkPager;
 
                             </div>
                         </div>
+                        <?php }?>
                     <?php endforeach;?>
                     </aside>
                     <aside class="widget pos-padding">
                         <h3 class="widget-title text-uppercase text-center">Recent Posts</h3>
                     <?php foreach($recent as $article): ?>
+                    
+                        <?php if($article->status ==1){ ?>
                         <div class="thumb-latest-posts">
 
 
@@ -92,16 +99,20 @@ use yii\widgets\LinkPager;
                                 </div>
                             </div>
                         </div>
+                        <?php }?>
                     <?php endforeach;?>
+                    
                     </aside>
                     <aside class="widget border pos-padding">
                         <a style="margin-left:30%;"href="<?= Url::toRoute(['site/category', 'id'=>$article->category_id])?>"><h3 class="widget-title text-uppercase text-center">Categories</h3></a>
                         <ul>
                             <?php foreach($categories as $category):?>
+                    <?php if($article->status ==1){ ?>
                             <li>
-                                <a href="<?= Url::toRoute(['site/category', 'id'=>$article->category_id])?>"><?= $category->title; ?></a>
+                                <a href="<?= Url::toRoute(['site/category', 'id'=>$category->id])?>"><?= $category->title; ?></a>
                                 <span class="post-count pull-right"> (<?= $category->getArticlescount(); ?>)</span>
                             </li>
+                    <?php }?>
                             <?php endforeach;?>
                         </ul>
                     </aside>
