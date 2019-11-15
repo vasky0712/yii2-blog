@@ -26,8 +26,7 @@ class ArticleController extends Controller
     public function actionSetImage($id)
     {
         $modelUser = User::findOne(Yii::$app->user->id);
-        if (($model2 = Article::findOne($id)) !== null) {
-            if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+            if(  $modelUser->isAdmin==1){
            
         
                 $model = new ImageUpload;
@@ -48,7 +47,7 @@ class ArticleController extends Controller
                 }
                 
                 return $this->render('image', ['model'=>$model]);   
-            } 
+            
         }    
         throw new NotFoundHttpException('The requested page does not exist.');                                                  
         

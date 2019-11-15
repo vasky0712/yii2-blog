@@ -4,14 +4,22 @@ namespace app\modules\admin\controllers;
 
 use app\models\Comment;
 use yii\web\Controller;
+use app\models\User;
+use yii;
 
 class CommentController extends Controller
 {
     public function actionIndex()
     {
-        $comments = Comment::find()->orderBy('id desc')->all();
+        $modelUser = User::findOne(Yii::$app->user->id);
+            if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+           
         
-        return $this->render('index',['comments'=>$comments]);
+                $comments = Comment::find()->orderBy('id desc')->all();
+                
+                return $this->render('index',['comments'=>$comments]);  
+            }
+               
     }
 
     public function actionDelete($id)

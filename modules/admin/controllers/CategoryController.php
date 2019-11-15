@@ -8,6 +8,7 @@ use app\models\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
 
 /**
  * CategoryController implements the CRUD actions for Category model.
@@ -35,13 +36,18 @@ class CategoryController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new CategorySearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $modelUser = User::findOne(Yii::$app->user->id);
+            if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+           
+        
+                $searchModel = new CategorySearch();
+                $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+                return $this->render('index', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                ]);
+            }    
     }
 
     /**
@@ -52,9 +58,12 @@ class CategoryController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $modelUser = User::findOne(Yii::$app->user->id);
+            if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+                return $this->render('view', [
+                    'model' => $this->findModel($id),
+                ]);
+            }    
     }
 
     /**
@@ -64,15 +73,19 @@ class CategoryController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Category();
+        $modelUser = User::findOne(Yii::$app->user->id);
+        if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+                $model = new Category();
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+
+                return $this->render('create', [
+                    'model' => $model,
+                ]); 
+        }        
     }
 
     /**
@@ -84,15 +97,18 @@ class CategoryController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $modelUser = User::findOne(Yii::$app->user->id);
+        if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+                $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+
+                return $this->render('update', [
+                    'model' => $model,
+                ]); 
         }
-
-        return $this->render('update', [
-            'model' => $model,
-        ]);
     }
 
     /**
