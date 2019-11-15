@@ -12,6 +12,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
+use app\models\User;
 
 /**
  * ArticleController implements the CRUD actions for Article model.
@@ -24,18 +25,33 @@ class ArticleController extends Controller
     
     public function actionSetImage($id)
     {
-        $model = new ImageUpload;
-        if (Yii::$app->request->isPost)
-        {
-            $article = $this->findModel($id);
-            $file = UploadedFile::getInstance($model, 'image');
-            if($article->saveImage($model->uploadFile($file, $article->image)))
-            {
-                return $this->redirect(['view', 'id'=>$article->id]);
-            }
-        }
+        $modelUser = User::findOne(Yii::$app->user->id);
+        if (($model2 = Article::findOne($id)) !== null) {
+            if($model2->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1){
+           
         
-        return $this->render('image', ['model'=>$model]);
+                $model = new ImageUpload;
+                if (Yii::$app->request->isPost)
+                {
+                
+                                                                    
+                            $article = $this->findModel($id);
+                            $file = UploadedFile::getInstance($model, 'image');
+                            if($article->saveImage($model->uploadFile($file, $article->image)))
+                            {
+                                return $this->redirect(['view', 'id'=>$article->id]);
+                            }                       
+
+                        
+                    
+
+                }
+                
+                return $this->render('image', ['model'=>$model]);   
+            } 
+        }    
+        throw new NotFoundHttpException('The requested page does not exist.');                                                  
+        
     }
      
     public function actionSetCategory($id){
@@ -145,9 +161,9 @@ class ArticleController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+            return $this->render('view', [
+                'model' => $this->findModel($id),
+            ]);
     }
 
     /**
@@ -211,7 +227,9 @@ class ArticleController extends Controller
      */
     protected function findModel($id)
     {
+        $modelUser = User::findOne(Yii::$app->user->id);
         if (($model = Article::findOne($id)) !== null) {
+            if($model->user_id==Yii::$app->user->id ||  $modelUser->isAdmin==1)
             return $model;
         }
 

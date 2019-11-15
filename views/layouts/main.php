@@ -34,7 +34,7 @@ $header->header();
 <?= $content ?>
 
 
-<footer class="footer-widget-section">
+<footer class="footer-widget-section footer">
     <div class="container">
     </div>
     <div class="footer-copy">
@@ -49,6 +49,7 @@ $header->header();
         </div>
     </div>
 </footer>
+
 
 <?php $this->endBody() ?>
 </body>

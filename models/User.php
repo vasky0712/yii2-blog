@@ -120,4 +120,14 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->photo;
     }
+
+    public static function getUserId($author){
+        $authorArticles =  User::find()->where(['name'=>$author])->all();
+        return ($authorArticles['0']->id);
+    }
+
+    public static function getDate($date){
+        $authorArticles =  Article::find()->where(['date'=>$date])->all();
+        return ($authorArticles);
+    }
 }

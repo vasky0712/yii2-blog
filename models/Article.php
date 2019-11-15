@@ -202,9 +202,26 @@ class Article extends \yii\db\ActiveRecord
 
     }
 
+    public static function getArticles($id){
+        return Article::find()->where(['User_id'=>$id])->all();
+    }
+
+    public static function getArticlesByAuthorAndData($id, $date){
+        return Article::find()->where(['User_id'=>$id, 'date'=>$date])->all();
+    }
+
     public function viewedCounter(){
         $this->viewed += 1;
         return $this->save(false);
+    }
+
+    public static function getNecessaryArticles($status){
+        return Article::find()->where(['author'=>$status])->all();
+    }
+
+    public static function getDateByDate($date){
+        $authorArticles =  Article::find()->where(['date'=>$date])->all();
+        return ($authorArticles);
     }
     
 }

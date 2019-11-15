@@ -48,12 +48,12 @@ class Header extends \yii\db\ActiveRecord{
                                         ['class' => 'btn btn-link logout', 'style'=>"padding-top:10px;"]
                                     )
                                     . Html::endForm() ?>
+                                    
+                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . '/admin/article'])?>">Articles</a></li>
+                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . '/admin/tag/index'])?>">Tags</a></li>
                                    <?php if(Yii::$app->user->identity->isAdmin==1){?> 
-                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . 'admin/article'])?>">Articles</a></li>
-                                   <?php }
-                                      else{
-                                          ?>
-                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . 'site/articles'])?>">Articles</a></li>
+                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . '/admin/category/index'])?>">Category</a></li>
+                                <li><a href="<?= Url::toRoute([Yii::getAlias('@web') . '/admin/comment/index'])?>">Comment</a></li>
                                       <?php }?>
                                 <?php endif;?>
                                 

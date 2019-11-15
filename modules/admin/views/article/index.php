@@ -10,8 +10,11 @@ use yii\grid\GridView;
 $this->title = 'Articles';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="article-index">
 
+<div class="main-content">
+    <div class="container">
+
+    <div class="col-md-8"></div>
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
@@ -49,4 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 
+
+</div>
 </div>

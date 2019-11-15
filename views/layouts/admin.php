@@ -1,150 +1,57 @@
 <?php
-
 /* @var $this \yii\web\View */
 /* @var $content string */
-
-use app\widgets\Alert;
+use app\assets\PublicAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\helpers\Url;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
-use yii\helpers\Url;
 use app\models\Header;
+use yii\base\Model;
 
-AppAsset::register($this);
+PublicAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php $this->registerCsrfMetaTags() ?>
+    <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
+<?php 
 
-<div class="wrap">
-    <?php
-
-    if(Yii::$app->user->identity->isAdmin ==1){
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Articles', 'url' => ['/admin/article/index']],
-            ['label' => 'Categories', 'url' => ['/admin/category/index']],
-            ['label' => 'Commentaries', 'url' => ['/admin/comment/index']],
-            ['label' => 'Tags', 'url' => ['/admin/tag/index']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->name . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
-    ]);
-    NavBar::end();
-    
-
-
+$header = new Header();
+$header->header();
 
 ?>
-    <div class="wrap">
-        <?php
-        NavBar::begin([
-            'brandLabel' => Yii::$app->name,
-            'brandUrl' => Yii::$app->homeUrl,
-            'options' => [
-                'class' => 'navbar-inverse navbar-fixed-top',
-            ],
-        ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav navbar-right'],
-            'items' => [
-                ['label' => 'Articles', 'url' => ['/admin/article/index']],
-                ['label' => 'Categories', 'url' => ['/admin/category/index']],
-                ['label' => 'Commentaries', 'url' => ['/admin/comment/index']],
-                ['label' => 'Tags', 'url' => ['/admin/tag/index']],
-                Yii::$app->user->isGuest ? (
-                    ['label' => 'Login', 'url' => ['/site/login']]
-                ) : (
-                    '<li>'
-                    . Html::beginForm([Yii::getAlias('@web') . '/site/logout'], 'post')
-                    . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->name . ')',
-                        ['class' => 'btn btn-link logout']
-                    )
-                    . Html::endForm()
-                    . '</li>'
-                )
-            ],
-        ]);
-        NavBar::end();
-        ?>
-    
+
+<?= $content ?>
+
+
+<footer class="footer-widget-section footer">
+    <div class="container">
+    </div>
+    <div class="footer-copy">
         <div class="container">
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
-            <?= Alert::widget() ?>
-            <?= $content ?>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center">&copy; В 2015гг <a href="#"> </a> этот шаблон  <i
+                            class="fa fa-heart"></i> сделал  <a href="#">Rahim</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <footer class="footer">
-        <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-    
-            <p class="pull-right"><?= Yii::powered() ?></p>
-        </div>
-    </footer>
-    
- 
-
-
-   <? }elseif(Yii::$app->user->isGuest){
-        
-        $header = new Header();
-        $header->header();
-    }
-    else{
-        $header = new Header();
-        $header->header();?>
-        
-        
-          <?php };?>
-        </ul>
-                </div>
-    
+</footer>
 
 <?php $this->endBody() ?>
-
-<?php $this->registerJsFile('/ckeditor/ckeditor.js');?>
-<?php $this->registerJsFile('/ckfinder/ckfinder.js');?>
-
-<script>
-    $(document).ready(function(){
-        var editor = CKEDITOR.replaceAll();
-        CKFinder.setupCKEditor( editor );
-    });
-</script>
 </body>
 </html>
 <?php $this->endPage() ?>

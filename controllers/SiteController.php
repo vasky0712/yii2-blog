@@ -10,10 +10,17 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 use app\models\Article;
+use app\models\User;
 use app\models\CommentForm;
 use yii\data\Pagination;
 use app\models\Category;
 use app\models\ArticleSearch;
+use app\models\ImageUpload;
+use yii\web\UploadedFile;
+use yii\helpers\ArrayHelper;
+use app\models\Status;
+use app\models\Tag;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -59,6 +66,16 @@ class SiteController extends Controller
             ],
         ];
     }
+    public function actionSearchByAuthor($status, $find){
+        $userId = User::getUserId($status);
+        $byAarticles = Article::getArticles($userId);
+        return $this->render('search',[
+            'articles'=>$byAarticles,
+            'find' =>$find
+        ]);
+    }
+
+    
 
     /**
      * Displays homepage.
@@ -75,14 +92,60 @@ class SiteController extends Controller
 
         $categories = Category::getAll();
 
+
+        if(Yii::$app->request->isPost)
+        {
+            
+            
+            if($status = Yii::$app->request->post('author') and !$status2 = Yii::$app->request->post('date') ){
+                if($userId = User::getUserId($status) ){
+                    $byAarticles = Article::getArticles($userId);
+
+                    return $this->redirect(['site/search-by-author', 'status' => $status, 'find'=>true]);
+                    
+                }
+                else{
+                    return $this->redirect(['site/search-by-author', 'status' => $status, 'find'=>false]);
+                }
+            }
+
+            if($status = Yii::$app->request->post('date') and !$status2 = Yii::$app->request->post('author')){
+                if($articles = Article::getDateByDate($status) ){
+                    return $this->render('search',[
+                        'articles'=>$articles,
+                        'find' =>$find=true
+                    ]);
+                }else{
+                    return $this->redirect(['site/search-by-author', 'status' => $status, 'find'=>false]);
+                }
+            }
+
+            if($author = Yii::$app->request->post('author') and $date = Yii::$app->request->post('date')){
+                if($userId = User::getUserId($author) ){
+                    $byAarticles = Article::getArticlesByAuthorAndData($userId, $date);
+
+                    return $this->redirect(['site/search-by-author', 'status' => $byAarticles, 'find'=>true]);
+                    
+                }
+                else{
+                    return $this->redirect(['site/search-by-author', 'status' => $status, 'find'=>false]);
+                }
+            }
+            
+           
+        }
+
         return $this->render('index',[
             'articles'=>$data['articles'], 
             'pagination' => $data['pagination'],
             'popular'=>$popular,
             'recent'=>$recent,
-            'categories'=>$categories
+            'categories'=>$categories,
+            'byAarticles'=>$byAarticles
         ]);
     }
+
+   
 
     /**
      * Login action.
@@ -146,7 +209,7 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionView($id){
+    public function actionSingle($id){
 
         $popular = Article::getPopular();
 
@@ -170,6 +233,14 @@ class SiteController extends Controller
             'commentForm'=> $commentForm
         ]);
     }
+
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+    
 
     public function actionCategory($id){
         $data = Category::getArticlesByCategory($id);
@@ -197,7 +268,7 @@ class SiteController extends Controller
 
 
                 Yii::$app->getSession()->setFlash('comment', 'Your comment wil be added soon!');
-                return $this->redirect(['site/view', 'id'=>$id]);
+                return $this->redirect(['site/single', 'id'=>$id]);
 
             }
         }
@@ -214,4 +285,50 @@ class SiteController extends Controller
         ]);
 
     }
+
+    public function actionCreate()
+    {
+        $model = new Article();
+
+        if ($model->load(Yii::$app->request->post()) && $model->saveArticle()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->saveArticle()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+    protected function findModel($id)
+    {
+        if (($model = Article::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    
+    
+    
 }

@@ -31,6 +31,7 @@ class CommentForm extends Model
             
         }
 
+        
         $comment->articleId = $articleId;
 
         $comment->status = 0;
